@@ -30,8 +30,11 @@ def apply_rules(text, rules):
         if "replacement" in rule:
             repl = rule["replacement"]
             text = re.sub(pattern, repl, text)
-        elif "replacement_func" in rule and rule["replacement_func"] == "convert_to_halfwidth":
-            text = re.sub(pattern, convert_to_halfwidth, text)
+        elif "replacement_func" in rule:
+            if rule["replacement_func"] == "convert_to_halfwidth":
+                text = re.sub(pattern, convert_to_halfwidth, text)
+            elif rule["replacement_func"] == "convert_to_halfwidth_alpha":
+                text = re.sub(pattern, convert_to_halfwidth_alpha, text)
     return text
 
 def login():
