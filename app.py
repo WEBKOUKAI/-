@@ -2,17 +2,22 @@ import streamlit as st
 import re
 import json
 
-# シンプルなログイン機構
+# ✅ 必ず最初にセッションキーの初期化
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
+
 def login():
     st.title("ログイン")
-    if "authenticated" not in st.session_state:
-        st.session_state["authenticated"] = False
 
-    password = st.text_input("パスワードを入力してください", type="password")
-    if st.button("ログイン"):
+    with st.form("login_form", clear_on_submit=False):
+        password = st.text_input("パスワードを入力してください", type="password", key="login_pw")
+        submitted = st.form_submit_button("ログイン（Enterキー対応）")
+
+    if submitted:
         try:
-            if password == st.secrets["auth"]["password"]:
+            if st.session_state["login_pw"] == st.secrets["auth"]["password"]:
                 st.session_state["authenticated"] = True
+                st.experimental_rerun()
             else:
                 st.warning("パスワードが違います")
         except KeyError:
