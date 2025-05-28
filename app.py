@@ -14,6 +14,12 @@ def convert_to_halfwidth(match):
         "0123456789"
     ))
 
+def convert_to_halfwidth_alpha(match):
+    return match.group(0).translate(str.maketrans(
+        "ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ",
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    ))
+
 def load_rules(rule_file):
     with open(rule_file, "r", encoding="utf-8") as f:
         return json.load(f)
