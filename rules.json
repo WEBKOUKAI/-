@@ -10,5 +10,9 @@
   {
     "pattern": "約",
     "replacement": "およそ"
-  }
+  },
+  {
+  "pattern": "[Ａ-Ｚａ-ｚ]+",
+  "replacement_func": "convert_to_halfwidth_alpha"
+}
 ]
