@@ -1,0 +1,14 @@
+[
+  {
+    "pattern": "子供",
+    "replacement": "子ども"
+  },
+  {
+    "pattern": "[０-９]+",
+    "replacement_func": "convert_to_halfwidth"
+  },
+  {
+    "pattern": "約",
+    "replacement": "およそ"
+  }
+]
