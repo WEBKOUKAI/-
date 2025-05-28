@@ -2,31 +2,11 @@ import streamlit as st
 import re
 import json
 
-# ✅ 必ず最初にセッションキーの初期化
+# セッション状態の初期化
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
-
-def login():
-    st.title("ログイン")
-
-    with st.form("login_form", clear_on_submit=False):
-        password = st.text_input("パスワードを入力してください", type="password", key="login_pw")
-        submitted = st.form_submit_button("ログイン（Enterキー対応）")
-
-    if submitted:
-        try:
-            if st.session_state["login_pw"] == st.secrets["auth"]["password"]:
-                st.session_state["authenticated"] = True
-                st.experimental_rerun()
-            else:
-                st.warning("パスワードが違います")
-        except KeyError:
-            st.error("Secretsにパスワードが設定されていません")
-
-if not st.session_state["authenticated"]:
-    login()
-    st.stop()
-
+if "login_attempted" not in st.session_state:
+    st.session_state["login_attempted"] = False
 
 def convert_to_halfwidth(match):
     return match.group(0).translate(str.maketrans(
@@ -48,6 +28,28 @@ def apply_rules(text, rules):
             text = re.sub(pattern, convert_to_halfwidth, text)
     return text
 
+def login():
+    st.title("ログイン")
+
+    with st.form("login_form"):
+        password = st.text_input("パスワードを入力してください", type="password")
+        submitted = st.form_submit_button("ログイン（Enterキー対応）")
+
+    if submitted:
+        st.session_state["login_attempted"] = True
+        try:
+            if password == st.secrets["auth"]["password"]:
+                st.session_state["authenticated"] = True
+            else:
+                st.warning("パスワードが違います")
+        except KeyError:
+            st.error("Secretsにパスワードが設定されていません")
+
+if not st.session_state["authenticated"]:
+    login()
+    st.stop()
+
+# 認証成功後のメイン画面
 st.title("NHKスタイル 校正ツール")
 
 uploaded_file = st.file_uploader("テキストファイルをアップロード", type=["txt"])
